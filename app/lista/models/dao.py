@@ -1,33 +1,48 @@
 from lista.models.item import Item
-
+from werkzeug.security import safe_str_cmp
 class ItemDao:
+    item1 = Item(1, "maças")
+    item2 = Item(2, "tomates")
+    item3 = Item(3, "bananas")
+    item4 = Item(4, "leite condensado")
+    item5 = Item(5, "peras")
+    indice = 5
+    LISTA = [item1,item2,item3,item4,item5]
 
-    def __init__(self):
-        item1 = Item(1, "maças")
-        item2 = Item(2, "tomates")
-        item3 = Item(3, "bananas")
-        item4 = Item(4, "leite condensado")
-        item5 = Item(5, "bananas")
-        self.lista = [item1, item2, item3, item4, item5]
-
-    def adicionar(self,nome):
-        lista = [i for i in self.lista if i.nome == nome]
+    @classmethod
+    def adicionar(cls,nome):
+        lista = [i for i in cls.LISTA if i.nome == nome]
         if not lista:
-            item = Item(self.lista.count+1,nome)
-            self.lista.append(item)
+            cls.indice = cls.indice + 1
+            item = Item(cls.indice,nome)
+            cls.LISTA.append(item)
 
-    def encontrar_pelo_id(self,id):
-        lista = [i for i in self.lista if i.id == id]
+    @classmethod
+    def encontrar_pelo_id(cls,id):
+        lista = [i for i in cls.LISTA if i.id == id]
         return lista[0] if lista else None
-    def encontrar_pelo_nome(self,nome):
-        lista = [i for i in self.lista if i.nome == nome]
-        return lista[0] if lista else None
-    def listar(self):
-        return self.lista
-    def remover_pelo_nome(self,nome):
-        lista = [i for i in self.lista if i.nome != nome]
-        self.lista = lista
-    def remover_pelo_id(self,id):
-        lista = [i for i in self.lista if i.id != id]
-        self.lista = lista
+
+    @classmethod
+    def encontrar_pelo_nome(cls,nome):
+        lista = [i for i in cls.LISTA if i.nome == nome]
+
+        if len(lista) > 0:
+            return lista[0]
+        else:
+            return None
+
+    @classmethod
+    def listar(cls):
+        return cls.LISTA
+
+    @classmethod
+    def remover_pelo_nome(cls,nome):
+        lista = [i for i in cls.LISTA if i.nome != nome]
+        cls.LISTA = lista
+
+
+    @classmethod
+    def remover_pelo_id(cls,id):
+        lista = [i for i in cls.LISTA if i.id != id]
+        cls.LISTA = lista
 

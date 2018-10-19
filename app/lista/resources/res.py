@@ -16,13 +16,16 @@ class Item(Resource):
     def get(self,item):
         json = ''
         try:
-            itemDao = ItemDao()
-            item = itemDao.encontrar_pelo_nome(item)
-            schema = ItemSchema()
-            json = schema.dump(item).data
+            i = ItemDao.encontrar_pelo_nome(item)
+            if i:
+                schema = ItemSchema()
+                json = schema.dump(i).data
+            else:
+                abort(404, message="Item {} não está na lista".format(item))
         except Exception as e:
             print(e)
             abort(404, message="Item {} não está na lista".format(item))
+
         return json,201
 
 
@@ -31,13 +34,13 @@ class Item(Resource):
         try:
             data = _item_parser.parse_args()
             nome = data['item']
-            itemDao = ItemDao()
-            item = itemDao.encontrar_pelo_nome(nome)
+
+            item = ItemDao.encontrar_pelo_nome(nome)
             if item :
-                return {"message":"Item {} já está na lista".format(item)}
+                return {"message":"Item {} já está na lista".format(nome)}
             else:
-                itemDao.adicionar(nome)
-                item = itemDao.encontrar_pelo_nome(item)
+                ItemDao.adicionar(nome)
+                item = ItemDao.encontrar_pelo_nome(nome)
                 schema = ItemSchema()
                 json = schema.dump(item).data
         except Exception as e:
@@ -46,33 +49,33 @@ class Item(Resource):
         return json, 201
 
     def delete(self,item):
-        json = ''
+        json = []
         try:
-            itemDao = ItemDao()
-            item = itemDao.encontrar_pelo_nome(item)
-            if item:
-                itemDao.remover_pelo_nome(item)
+            i = ItemDao.encontrar_pelo_nome(item)
+            if i:
+                ItemDao.remover_pelo_nome(item)
+                lista = ItemDao.listar()
                 schema = ItemSchema(many=True)
-                json = schema.dump(itemDao.listar()).data
+                json = schema.dump(lista).data
             else:
                 abort(404, message="Item {} não está na lista".format(item))
         except Exception as e:
             print(e)
-        return json, 204
+        return json, 201
 
     def put(self):
         json = ''
         try:
             data = _item_parser.parse_args()
             nome = data['item']
-            itemDao = ItemDao()
-            item = itemDao.encontrar_pelo_nome(nome)
+
+            item = ItemDao.encontrar_pelo_nome(nome)
             if item :
                 return {"message":"Item {} já está na lista".format(item)},200
             else:
-                itemDao.adicionar(nome)
+                ItemDao.adicionar(nome)
                 schema = ItemSchema(many=True)
-                item = itemDao.encontrar_pelo_nome(nome)
+                item = ItemDao.encontrar_pelo_nome(nome)
                 json = schema.dump(item).data
         except Exception as e:
             print(e)
@@ -82,11 +85,7 @@ class ItemList(Resource):
     def get(self):
         json = []
         try:
-            print("ok")
-            itemDao = ItemDao()
-
-            lista = itemDao.listar()
-            print(lista)
+            lista = ItemDao.listar()
             schema = ItemSchema(many=True)
             json = schema.dump(lista).data
         except Exception as e:
