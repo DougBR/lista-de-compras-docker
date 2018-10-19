@@ -1,9 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_restful import Api
-
 from lista.resources.api_v1 import Item,ItemList
-
 app = Flask(__name__)
 api = Api(app)
 CORS(app,resources={r"/*": {"origins": "*"}}) #O uso do cors
