@@ -1,4 +1,3 @@
-from werkzeug.security import safe_str_cmp
 from flask import jsonify
 from flask_restful import Resource, abort,reqparse
 
@@ -11,9 +10,6 @@ _item_parser.add_argument('item',
                           required=True,
                           help="O nome do Item não pode estar em branco."
                           )
-
-
-
 '''
 Esta classe representa um recurso na arquitetura REST.
 Ela implementa os métodos GET,POST,PUT e DELETE
