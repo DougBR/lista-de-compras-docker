@@ -1,7 +1,0 @@
-uWSGI
-Flask
-Flask-RESTful
-Flask-Cors
-werkzeug
-flask-marshmallow
-marshmallow-sqlalchemy

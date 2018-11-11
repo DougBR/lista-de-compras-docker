@@ -33,7 +33,7 @@ services:
         source: ./app
         target: /tmp
     ports:
-      - "8080:8080"
+      - "80:80"
     networks:
       - external
     depends_on:
