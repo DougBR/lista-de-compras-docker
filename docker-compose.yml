@@ -1,64 +1,22 @@
-# docker-compose down -v
-
-version: '3.7'
-
+# docker-compose-production.yml
+version: "3"
 services:
-
-  web: # Flask and uWSGI
-    container_name: web 
-    restart: always
-    build: ./app
-    volumes:
-      - type: bind
-        source: ./app
-        target: /src
-    command: uwsgi --ini ./uwsgi.ini
-    networks: 
-      - internal
-      - external
-    #    volume:
-    #      nocopy: true
-    #expose:
-    #  - "80"
-    # depends_on: 
-    #  - db
-
-  nginx:
-    container_name: nginx
-    image: nginx:latest
-    restart: always
-    volumes:
-      - ./nginx/:/etc/nginx/
-      - type: bind
-        source: ./app
-        target: /tmp
+  #lista-de-compras-backend:
+  #  depends_on:
+  #    - lista-de-compras-letsencrypt
+  lista-de-compras-letsencrypt:
+    image: linuxserver/letsencrypt
+    container_name: lista-de-compras-letsencrypt
     ports:
-      - "80:80"
-    networks:
-      - external
-    depends_on:
-      - web
-    #build: ./nginx
-
-  # db:
-  #   image: postgres:latest
-  #   restart: always
-  #   volumes:
-  #    - "dbdata:/var/lib/postgresql/data"
-  #   networks:
-  #     - internal
-
-networks:
-  internal:
-    driver: bridge
-  external:
-    driver: bridge
-
-# volumes:
-#  appdata: 
-#  dbdata:
-
-# ${COMPOSE_PROJECT_NAME}
-
-
-      
+      - 80:80
+      - 443:443
+    volumes:
+      - ./config/letsencrypt:/config
+    environment:
+      - EMAIL=mikelet@gmail.com
+      - URL=lista-de-compras.ml
+      - SUBDOMAINS=www,api
+      - VALIDATION=http
+      - TZ=America/Sao_Paulo
+      - PUID=0
+      - PGID=0
