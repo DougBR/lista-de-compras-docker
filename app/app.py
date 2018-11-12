@@ -1,6 +1,5 @@
 from typing import List, Dict
 from flask import Flask
-import mysql.connector
 import json
 
 app = Flask(__name__)
