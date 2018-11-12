@@ -1,9 +1,23 @@
 # docker-compose-production.yml
 version: "3"
 services:
-  #lista-de-compras-backend:
-  #  depends_on:
-  #    - lista-de-compras-letsencrypt
+  db:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d/:ro
+  app-flask:
+    build: ./app
+    links:
+      - db
+    ports:
+      - "5000:5000"
+    depends_on:
+      - lista-de-compras-letsencrypt
+      
   lista-de-compras-letsencrypt:
     image: linuxserver/letsencrypt
     container_name: lista-de-compras-letsencrypt
