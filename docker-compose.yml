@@ -18,5 +18,5 @@ services:
       - SUBDOMAINS=www,api
       - VALIDATION=http
       - TZ=America/Sao_Paulo
-      - PUID=0
-      - PGID=0
+      - PUID=1001
+      - PGID=1001
