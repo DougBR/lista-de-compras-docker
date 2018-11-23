@@ -30,8 +30,8 @@ services:
       - ./config/letsencrypt:/config
     environment:
       - EMAIL=mikelet@gmail.com
-      - URL=lista-de-compras.ml
-      - SUBDOMAINS=www,api
+      - URL=lista-de-compras.tk
+      # - SUBDOMAINS=www,api
       - VALIDATION=http
       - TZ=America/Sao_Paulo
       - PUID=1001

@@ -1,13 +1,42 @@
-from typing import List, Dict
 from flask import Flask
-import json
+from flask_cors import CORS
+from flask_restful import Api
+#Importar cada recurso usado pela API.
+from lista.resources.item_resource import ItemResource, ItensResource
+from lista.resources.usuario_resource import UsuarioResource,UsuariosResource
+from lista.resources.lista_resource import ListaResource, ListasResource
 
 app = Flask(__name__)
+#Configurações relativas ao sqlalchemy
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///banco.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['PROPAGATE_EXCEPTIONS'] = True
+app.config['SQLALCHEMY_ECHO'] = False
 
-@app.route('/')
-def index() -> str:
-    return json.dumps({"oi": "michelet"})
+app.secret_key = b'\xc4]gW\x0f\x8d\xc8\x05ocG\xf1\xb1j,{'
 
+#fim configurações relativas ao sqlalchemy
+api = Api(app)
+CORS(app,resources={r"/*": {"origins": "*"}}) #O uso do cors
+#cria as tabelas do banco de dados, caso elas não estejam criadas
+@app.before_first_request
+def create_tables():
+    from dao import db
+    db.init_app(app)
+    print("criar tabelas")
+    db.create_all()
+#fim criaçaõ de tabelas
+
+api.add_resource(ItensResource, '/itens')
+api.add_resource(ItemResource, '/item', '/item/<string:item>')
+
+
+api.add_resource(ListasResource, '/listas')
+api.add_resource(ListaResource, '/lista','/lista/<string:lista>')
+api.add_resource(UsuarioResource,'/usuario','/usuario/<string:nome>')
+api.add_resource(UsuariosResource, '/usuarios')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    from dao import db
+    db.init_app(app)
+    app.run(host='0.0.0.0',debug=False)
