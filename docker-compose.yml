@@ -19,8 +19,8 @@ services:
     volumes:
       - ./config/letsencrypt:/config
     environment:
-      - EMAIL=mikelet@gmail.com
-      - URL=homologacao.pcs.usp.br
+      - EMAIL=douglas.luan.souza@usp.br
+      - URL=realiza.tk
       # - SUBDOMAINS=www,api
       - VALIDATION=http
       - TZ=America/Sao_Paulo
