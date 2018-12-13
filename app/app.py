@@ -11,7 +11,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///banco.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PROPAGATE_EXCEPTIONS'] = True
-app.config['SQLALCHEMY_ECHO'] = False
+app.config['SQLALCHEMY_ECHO'] = True
 
 app.secret_key = b'\xc4]gW\x0f\x8d\xc8\x05ocG\xf1\xb1j,{'
 
@@ -21,8 +21,6 @@ CORS(app,resources={r"/*": {"origins": "*"}}) #O uso do cors
 #cria as tabelas do banco de dados, caso elas não estejam criadas
 @app.before_first_request
 def create_tables():
-    from dao import db
-    db.init_app(app)
     print("criar tabelas")
     db.create_all()
 #fim criaçaõ de tabelas
@@ -39,4 +37,4 @@ api.add_resource(UsuariosResource, '/usuarios')
 if __name__ == '__main__':
     from dao import db
     db.init_app(app)
-    app.run(host='0.0.0.0',debug=False)
+    app.run(port=5000,debug=True)
