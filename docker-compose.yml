@@ -1,18 +1,8 @@
 # docker-compose-production.yml
 version: "3"
 services:
-  db:
-    image: mysql:5.7
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-    volumes:
-      - ./data:/var/lib/mysql
   app-flask:
-    build: ./app
-    links:
-      - db
+    build: ./app    
     volumes:
       - ./app:/app
     ports:
@@ -30,7 +20,7 @@ services:
       - ./config/letsencrypt:/config
     environment:
       - EMAIL=mikelet@gmail.com
-      - URL=lista-de-compras.tk
+      - URL=homologacao.pcs.usp.br
       # - SUBDOMAINS=www,api
       - VALIDATION=http
       - TZ=America/Sao_Paulo
